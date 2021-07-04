@@ -14,19 +14,43 @@ class HomeScreen extends StatelessWidget {
         body: Consumer<HomeModel>(
           builder: (context, model, child) {
             return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Center(
-                  child: Row(
-                    children: [
-                      ElevatedButton(
-                          onPressed: () => model.onPushLogIn(context),
-                          child: Text("SignIn")),
-                      ElevatedButton(
-                          onPressed: () => model.onPushSignUp(context),
-                          child: Text("SignUp")),
-                    ],
-                  ),
+              child: Center(
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.lightBlueAccent,
+                      height: 100,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton.icon(
+                              icon: Icon(Icons.login),
+                              label:
+                                  Text("LogIn", style: TextStyle(fontSize: 20)),
+                              onPressed: () => model.onPushLogIn(context)),
+                          SizedBox(
+                            width: 50,
+                          ),
+                          ElevatedButton.icon(
+                              icon: Icon(Icons.person_add),
+                              label: Text("SignUp",
+                                  style: TextStyle(fontSize: 20)),
+                              onPressed: () => model.onPushSignUp(context)),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: ListTile(
+                        title: Text('UserName', style: TextStyle(fontSize: 25)),
+                        subtitle: Text('Mail', style: TextStyle(fontSize: 20)),
+                        leading: Icon(Icons.person, size: 35),
+                        trailing: IconButton(
+                            icon: Icon(Icons.add, size: 30), onPressed: () {}),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );

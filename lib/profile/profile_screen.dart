@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:memo/home/home_screen.dart';
-import 'package:memo/list_view/list_view_model.dart';
 import 'package:memo/login/login_screen.dart';
-import 'package:memo/profile/profile_screen.dart';
+import 'package:memo/profile/profile_model.dart';
 import 'package:provider/provider.dart';
 import '../add_screen/add_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ListViewScreen extends StatelessWidget {
+class ProfileScreen extends StatelessWidget {
+  final selectedUser;
   final logInUser;
-
-  ListViewScreen({this.logInUser});
+  ProfileScreen({required this.selectedUser,this.logInUser});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class ListViewScreen extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('LogInしてください'),
+              title: Text('ログインしてください'),
               actions: [
                 TextButton(
                   child: Text('OK'),
@@ -34,30 +33,13 @@ class ListViewScreen extends StatelessWidget {
           context, MaterialPageRoute(builder: (context) => LogInScreen()));
     }
 
-    return ChangeNotifierProvider<ListViewModel>(
-      create: (_) => ListViewModel()..fetchUsers(),
-      child: Consumer<ListViewModel>(builder: (context, model, child) {
+    return ChangeNotifierProvider<ProfileModel>(
+      create: (_) => ProfileModel(),
+      child: Consumer<ProfileModel>(builder: (context, model, child) {
         print(model.currentLogInUser);
         return Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.autorenew),
-              onPressed: () => model.fetchUsers(),
-            ),
-            title: Text('ListViewで表示'),
-            actions: [
-              IconButton(
-                  icon: Icon(Icons.logout),
-                  onPressed: () async {
-                    await model.onPushLogOut(context);
-                    if (model.currentLogInUser == null) {
-                      await Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
-                    }
-                  })
-            ],
+            title: Text('プロフィール'),
           ),
           body: Column(
             children: [
@@ -85,7 +67,18 @@ class ListViewScreen extends StatelessWidget {
                           style: TextStyle(fontSize: 20),
                         );
                       }
-                    })()
+                    })(),
+                    IconButton(
+                        icon: Icon(Icons.logout),
+                        onPressed: () async {
+                          await model.onPushLogOut(context);
+                          if (model.auth.currentUser == null) {
+                            await Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          }
+                        })
                   ],
                 ),
               ),
@@ -110,37 +103,37 @@ class ListViewScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     Column(
                         children: model.usersList.map((user) {
-                      return ListTile(
-                        title: Text('${user.name}',
-                            style: TextStyle(fontSize: 25)),
-                        subtitle: Text('${user.mail}',
-                            style: TextStyle(fontSize: 20)),
-                        contentPadding:
+                          return ListTile(
+                            title: Text('${user.name}',
+                                style: TextStyle(fontSize: 25)),
+                            subtitle: Text('${user.mail}',
+                                style: TextStyle(fontSize: 20)),
+                            contentPadding:
                             EdgeInsets.only(left: 16, right: 16, bottom: 10),
-                        leading: IconButton(
-                          icon: Icon(Icons.person, size: 35),
-                          onPressed: () async {
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProfileScreen(selectedUser: user,logInUser: model.currentLogInUser,),
-                                    fullscreenDialog: true));
-                          },
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.edit, size: 30),
-                          onPressed: () async {
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddScreen(user: user),
-                                    fullscreenDialog: true));
-                          },
-                        ),
-                        onLongPress: () async =>
-                            model.onPushDeleteUserFromFirebase(context, user),
-                      );
-                    }).toList()),
+                            leading: IconButton(
+                              icon: Icon(Icons.person, size: 35),
+                              onPressed: () async {
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScreen(),
+                                        fullscreenDialog: true));
+                              },
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.edit, size: 30),
+                              onPressed: () async {
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddScreen(user: user),
+                                        fullscreenDialog: true));
+                              },
+                            ),
+                            onLongPress: () async =>
+                                model.onPushDeleteUserFromFirebase(context, user),
+                          );
+                        }).toList()),
                     SizedBox(
                       height: 20,
                     ),

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../add_screen/add_screen.dart';
+import 'add_screen/add_screen.dart';
 
 class RadioListScreen extends StatefulWidget {
   @override
