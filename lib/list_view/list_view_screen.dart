@@ -45,19 +45,6 @@ class ListViewScreen extends StatelessWidget {
               onPressed: () => model.fetchUsers(),
             ),
             title: Text('ListViewで表示'),
-            actions: [
-              IconButton(
-                  icon: Icon(Icons.logout),
-                  onPressed: () async {
-                    await model.onPushLogOut(context);
-                    if (model.currentLogInUser == null) {
-                      await Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
-                    }
-                  })
-            ],
           ),
           body: Column(
             children: [
@@ -66,26 +53,28 @@ class ListViewScreen extends StatelessWidget {
                 height: 50,
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       "ログインユーザー：",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 20,),
                     ),
-                    SizedBox(width: 20),
-                    (() {
-                      if (model.currentLogInUser == null) {
-                        return Text(
-                          "Null",
-                          style: TextStyle(fontSize: 20),
-                        );
-                      } else {
-                        return Text(
-                          model.currentLogInUser!.email.toString(),
-                          style: TextStyle(fontSize: 20),
-                        );
-                      }
-                    })()
+                    if (model.currentLogInUser == null)
+                      Text("Null", style: TextStyle(fontSize: 20)),
+                    if (model.currentLogInUser != null)
+                      Text(model.currentLogInUser!.email.toString(),
+                          style: TextStyle(fontSize: 20)),
+                    Expanded(child: SizedBox()),
+                    IconButton(
+                        icon: Icon(Icons.logout),
+                        onPressed: () async {
+                          await model.onPushLogOut(context);
+                          if (model.auth.currentUser == null) {
+                            await Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          }
+                        })
                   ],
                 ),
               ),

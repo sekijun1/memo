@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:memo/add_screen/add_screen.dart';
 import 'package:memo/home/home_screen.dart';
 import 'package:memo/login/login_screen.dart';
 import 'package:memo/profile/profile_model.dart';
 import 'package:provider/provider.dart';
-import '../add_screen/add_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../users.dart';
+
 class ProfileScreen extends StatelessWidget {
-  final selectedUser;
+  final Users selectedUser;
   final logInUser;
-  ProfileScreen({required this.selectedUser,this.logInUser});
+
+  ProfileScreen({required this.selectedUser, this.logInUser});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,16 @@ class ProfileScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text('プロフィール'),
+            actions:[ IconButton(
+              icon: Icon(Icons.edit, size: 30),
+              onPressed: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddScreen(user: selectedUser),
+                        fullscreenDialog: true));
+              },
+            ),]
           ),
           body: Column(
             children: [
@@ -48,26 +61,19 @@ class ProfileScreen extends StatelessWidget {
                 height: 50,
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       "ログインユーザー：",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
                     ),
-                    SizedBox(width: 20),
-                    (() {
-                      if (model.currentLogInUser == null) {
-                        return Text(
-                          "Null",
-                          style: TextStyle(fontSize: 20),
-                        );
-                      } else {
-                        return Text(
-                          model.currentLogInUser!.email.toString(),
-                          style: TextStyle(fontSize: 20),
-                        );
-                      }
-                    })(),
+                    if (model.currentLogInUser == null)
+                      Text("Null", style: TextStyle(fontSize: 20)),
+                    if (model.currentLogInUser != null)
+                      Text(model.currentLogInUser!.email.toString(),
+                          style: TextStyle(fontSize: 20)),
+                    Expanded(child: SizedBox()),
                     IconButton(
                         icon: Icon(Icons.logout),
                         onPressed: () async {
@@ -84,69 +90,58 @@ class ProfileScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text('UserName', style: TextStyle(fontSize: 25)),
-                      subtitle: Text('Mail', style: TextStyle(fontSize: 20)),
-                      leading: Icon(Icons.person, size: 35),
-                      trailing: IconButton(
-                          icon: Icon(Icons.add, size: 30),
-                          onPressed: () async {
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddScreen(),
-                                    fullscreenDialog: true));
-                          }),
-                    ),
-                    SizedBox(height: 20),
-                    Column(
-                        children: model.usersList.map((user) {
-                          return ListTile(
-                            title: Text('${user.name}',
-                                style: TextStyle(fontSize: 25)),
-                            subtitle: Text('${user.mail}',
-                                style: TextStyle(fontSize: 20)),
-                            contentPadding:
-                            EdgeInsets.only(left: 16, right: 16, bottom: 10),
-                            leading: IconButton(
-                              icon: Icon(Icons.person, size: 35),
-                              onPressed: () async {
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen(),
-                                        fullscreenDialog: true));
-                              },
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.edit, size: 30),
-                              onPressed: () async {
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddScreen(user: user),
-                                        fullscreenDialog: true));
-                              },
-                            ),
-                            onLongPress: () async =>
-                                model.onPushDeleteUserFromFirebase(context, user),
-                          );
-                        }).toList()),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(
-                        onPressed: () => print(model.currentLogInUser),
-                        child: Text("currentLogInUser"))
-                  ],
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(20),
+                        child: Container(
+                          color: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            size: 150,
+                          ),
+                          // todo ↑UserImageに変更
+                          // child: Text('UserImage'),
+                          // width: 250,
+                          // height: 150,
+                          // color: Colors.white,
+                        ),
+                      ),
+                      profileTile('UserName', selectedUser.name),
+                      profileTile('DocumentID', selectedUser.documentID),
+                      profileTile('Mail', selectedUser.mail),
+                      profileTile('Password', selectedUser.password),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         );
       }),
+    );
+  }
+
+  Widget profileTile(String label, userParameter) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              width: 160,
+              child: Text('$label:', style: TextStyle(fontSize: 25))),
+          Row(
+            children: [
+              SizedBox(width: 50),
+              Text(userParameter ?? 'Nullだよ！！', style: TextStyle(fontSize: 20)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
