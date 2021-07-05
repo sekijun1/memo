@@ -68,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      "ログインユーザー：",
+                      "Your Mail：",
                       style: TextStyle(
                         fontSize: 20,
                       ),

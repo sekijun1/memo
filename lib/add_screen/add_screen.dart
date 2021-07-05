@@ -43,9 +43,9 @@ class AddScreen extends StatelessWidget {
                     child: Text(isUpdate ? "更新する" : "追加する"),
                     onPressed: () async {
                       if (isUpdate) {
-                        await onPushEditUser(model, context);
+                        await model.onPushEditUser(context,user);
                       } else {
-                        await onPushAddUser(model, context);
+                        await model.onPushAddUser(context);
                       }
                     },
                   )
@@ -76,71 +76,5 @@ class AddScreen extends StatelessWidget {
   //   );
   // }
 
-  Future onPushAddUser(AddScreenModel model, BuildContext context) async {
-    try {
-      await model.addUserToFirebase();
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('保存しました'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                )
-              ],
-            );
-          });
-      Navigator.of(context).pop();
-    } catch (e) {
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(e.toString()),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                )
-              ],
-            );
-          });
-    }
-  }
 
-  Future onPushEditUser(AddScreenModel model, BuildContext context) async {
-    try {
-      await model.updateUsersToFirebase(user);
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('保存しました'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                )
-              ],
-            );
-          });
-      Navigator.of(context).pop();
-    } catch (e) {
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(e.toString()),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                )
-              ],
-            );
-          });
-    }
-  }
 }

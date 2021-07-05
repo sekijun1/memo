@@ -8,9 +8,12 @@ class ListViewModel extends ChangeNotifier {
   FirebaseAuth auth = FirebaseAuth.instance;
   List<Users> usersList = [];
   User? currentLogInUser = FirebaseAuth.instance.currentUser;
+  var currentLogInUserData;
 
   Future fetchUsers() async {
     final snapshot = await users.get();
+    // if(currentLogInUser != null) currentLogInUserData = users.where('mail' == currentLogInUser!.email);
+    // print(currentLogInUserData);
     this.usersList = snapshot.docs
         .map(
           (user) => Users(

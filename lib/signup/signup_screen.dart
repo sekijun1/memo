@@ -25,7 +25,6 @@ class SignUpScreen extends StatelessWidget {
     print(nameController.text);
     print(mailController.text);
     print(passwordController.text);
-
     return ChangeNotifierProvider<SignUpModel>(
         create: (_) => SignUpModel(),
         child: Scaffold(
@@ -37,52 +36,53 @@ class SignUpScreen extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(30.0),
               child: Center(
-                  child: Column(
-                      children: [
-                      Text("UserName", style: TextStyle(fontSize: 25)),
-                  nameInputTextField(model),
-                  SizedBox(height: 50),
-                  Text("Mail", style: TextStyle(fontSize: 25)),
-                  mailInputTextField(model),
-                  SizedBox(height: 50),
-                  Text("Password", style: TextStyle(fontSize: 25)),
-                  passwordInputTextField(model),
-                  SizedBox(height: 50),
-                  SizedBox(
-                    width: 150,
-                    height: 100,
-                    child: Text('No Image Selected'),
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        model.imageURL =
-                        'https://toppng.com/uploads/preview/icons-logos-emojis-user-icon-png-transparent-11563566676e32kbvynug.png';
-                        print(model.imageURL);
-                      },
-                      icon: Icon(Icons.library_add)),
+                child: Column(
+                  children: [
+                    Text("UserName", style: TextStyle(fontSize: 25)),
+                    nameInputTextField(model),
+                    SizedBox(height: 50),
+                    Text("Mail", style: TextStyle(fontSize: 25)),
+                    mailInputTextField(model),
+                    SizedBox(height: 50),
+                    Text("Password", style: TextStyle(fontSize: 25)),
+                    passwordInputTextField(model),
+                    SizedBox(height: 50),
+                    SizedBox(
+                      width: 150,
+                      height: 100,
+                      child: Text('No Image Selected'),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          model.imageURL =
+                              'https://toppng.com/uploads/preview/icons-logos-emojis-user-icon-png-transparent-11563566676e32kbvynug.png';
+                          print(model.imageURL);
+                        },
+                        icon: Icon(Icons.library_add)),
 
-              // SizedBox(
-              //   width: 150,
-              //   height: 100,
-              //   child: model.imageFile == null
-              //       ? Text('No Image Selected.')
-              //       : Image.file(model.imageFile),
-              // ),
-              // IconButton(
-              //   icon: Icon(Icons.library_add),
-              //   onPressed: () async {
-              //     await model.showImagePicker();
-              //   },
-              // ),
-              ElevatedButton(
-                child: Text("登録する"),
-                onPressed: () async {
-                  onPushSignUp(model, context);
-                },
-              )
-              ],
-            ),)
-            ,
+                    // SizedBox(
+                    //   width: 150,
+                    //   height: 100,
+                    //   child: model.imageFile == null
+                    //       ? Text('No Image Selected.')
+                    //       : Image.file(model.imageFile),
+                    // ),
+                    // IconButton(
+                    //   icon: Icon(Icons.library_add),
+                    //   onPressed: () async {
+                    //     await model.showImagePicker();
+                    //   },
+                    // ),
+                    ElevatedButton.icon(
+                      icon: Icon(Icons.login,size: 20,),
+                      label: Text("SignUp & LogIn",style: TextStyle(fontSize: 15),),
+                      onPressed: () async {
+                        onPushSignUp(model, context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             );
           }),
         ));
@@ -138,8 +138,7 @@ class SignUpScreen extends StatelessWidget {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  ListViewScreen(
+              builder: (context) => ListViewScreen(
                     logInUser: model.auth.currentUser,
                   )));
     } catch (e) {

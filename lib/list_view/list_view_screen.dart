@@ -3,6 +3,7 @@ import 'package:memo/home/home_screen.dart';
 import 'package:memo/list_view/list_view_model.dart';
 import 'package:memo/login/login_screen.dart';
 import 'package:memo/profile/profile_screen.dart';
+import 'package:memo/signup/signup_screen.dart';
 import 'package:provider/provider.dart';
 import '../add_screen/add_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,7 +38,6 @@ class ListViewScreen extends StatelessWidget {
     return ChangeNotifierProvider<ListViewModel>(
       create: (_) => ListViewModel()..fetchUsers(),
       child: Consumer<ListViewModel>(builder: (context, model, child) {
-        print(model.currentLogInUser);
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -56,14 +56,17 @@ class ListViewScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        "Your mail：",
+                        "Your Mail：",
                         style: TextStyle(fontSize: 20,),
                       ),
                       if (model.currentLogInUser == null)
                         Text("Null", style: TextStyle(fontSize: 20)),
                       if (model.currentLogInUser != null)
-                        Text(model.currentLogInUser!.email.toString(),
-                            style: TextStyle(fontSize: 20)),
+                        InkWell(
+                          child: Text(model.currentLogInUser!.email.toString(),
+                              style: TextStyle(fontSize: 20)),
+                          // onTap: ()=>ProfileScreen(selectedUser: model.currentLogInUserData,logInUser: model.currentLogInUser,),
+                        ),
                       Expanded(child: SizedBox()),
                       IconButton(
                           icon: Icon(Icons.logout),
@@ -101,7 +104,7 @@ class ListViewScreen extends StatelessWidget {
                                 await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => AddScreen(),
+                                        builder: (context) => SignUpScreen(),
                                         fullscreenDialog: true));
                               }),
                         ),
