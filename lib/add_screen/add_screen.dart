@@ -7,7 +7,7 @@ class AddScreen extends StatelessWidget {
   AddScreen({this.user});
 
   final nameController = TextEditingController();
-  final mailController = TextEditingController();
+  // final mailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,11 @@ class AddScreen extends StatelessWidget {
 
     if (isUpdate) {
       nameController.text = user.name;
-      mailController.text = user.mail;
+      // mailController.text = user.mail;
     }
     print(isUpdate);
     print(nameController.text);
-    print(mailController.text);
+    // print(mailController.text);
 
     return ChangeNotifierProvider<AddScreenModel>(
         create: (_) => AddScreenModel(),
@@ -36,9 +36,9 @@ class AddScreen extends StatelessWidget {
                   Text("User Name", style: TextStyle(fontSize: 25)),
                   nameInputTextField(model),
                   SizedBox(height: 50),
-                  Text("Mail", style: TextStyle(fontSize: 25)),
-                  mailInputTextField(model),
-                  SizedBox(height: 50),
+                  // Text("Mail", style: TextStyle(fontSize: 25)),
+                  // mailInputTextField(model),
+                  // SizedBox(height: 50),
                   ElevatedButton(
                     child: Text(isUpdate ? "更新する" : "追加する"),
                     onPressed: () async {
@@ -66,15 +66,15 @@ class AddScreen extends StatelessWidget {
     );
   }
 
-  Widget mailInputTextField(model) {
-    return TextField(
-      controller: mailController,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(hintText: 'example@sekijun.com'),
-      style: TextStyle(fontSize: 20),
-      onChanged:(text)=> model.mail = text,
-    );
-  }
+  // Widget mailInputTextField(model) {
+  //   return TextField(
+  //     controller: mailController,
+  //     keyboardType: TextInputType.text,
+  //     decoration: InputDecoration(hintText: 'example@sekijun.com'),
+  //     style: TextStyle(fontSize: 20),
+  //     onChanged:(text)=> model.mail = text,
+  //   );
+  // }
 
   Future onPushAddUser(AddScreenModel model, BuildContext context) async {
     try {

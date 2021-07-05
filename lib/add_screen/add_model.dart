@@ -10,9 +10,7 @@ class AddScreenModel extends ChangeNotifier {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   Future addUserToFirebase() async {
-    if (name == "" || mail == "") {
-      throw "「UserName」と「MailAddress」を入力してください";
-    }
+    if (name == "") throw "「UserName」を入力してください";
     await users
         .doc()
         .set({'name': name, 'mail': mail});

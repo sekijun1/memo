@@ -56,7 +56,7 @@ class ListViewScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        "ログインユーザー：",
+                        "Your mail：",
                         style: TextStyle(fontSize: 20,),
                       ),
                       if (model.currentLogInUser == null)
