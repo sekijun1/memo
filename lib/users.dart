@@ -1,6 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
-
 class Users {
 
   Users({
@@ -8,13 +6,13 @@ class Users {
     required this.name,
     required this.mail,
     this.password,
-    this.image,
+    this.imageURL,
   });
 
   final String? documentID;
   final String? name;
   final String? mail;
   final String? password;
-  final Image? image;
+  final String? imageURL;
 
 }

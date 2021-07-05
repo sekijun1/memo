@@ -27,26 +27,29 @@ class LogInScreen extends StatelessWidget {
             ),
             body: Padding(
               padding: const EdgeInsets.all(30.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    // Text("UserName", style: TextStyle(fontSize: 25)),
-                    // nameInputTextField(model),
-                    SizedBox(height: 50),
-                    Text("Mail", style: TextStyle(fontSize: 25)),
-                    _mailInputTextField(model),
-                    SizedBox(height: 50),
-                    Text("Password", style: TextStyle(fontSize: 25)),
-                    _passwordInputTextField(model),
-                    SizedBox(height: 50),
-                    ElevatedButton(
-                      child: Text("LogIn"),
-                      onPressed: () async {
-                        onPushLogIn(model, context);
-                      },
-                    )
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Text("UserName", style: TextStyle(fontSize: 25)),
+                  // nameInputTextField(model),
+                  SizedBox(height: 50),
+                  Text("Mail", style: TextStyle(fontSize: 25)),
+                  _mailInputTextField(model),
+                  SizedBox(height: 50),
+                  Text("Password", style: TextStyle(fontSize: 25)),
+                  _passwordInputTextField(model),
+                  SizedBox(height: 50),
+                  Row(
+                    children: [
+                      Expanded(child: Container()),
+                      ElevatedButton.icon(
+                          icon: Icon(Icons.login),
+                          label:
+                          Text("LogIn", style: TextStyle(fontSize: 20)),
+                          onPressed: () async => onPushLogIn(model, context)),
+                    ],
+                  ),
+                ],
               ),
             ),
           );

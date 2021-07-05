@@ -4,31 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:memo/users.dart';
 
 class ListViewModel extends ChangeNotifier {
-
-
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   FirebaseAuth auth = FirebaseAuth.instance;
   List<Users> usersList = [];
   User? currentLogInUser = FirebaseAuth.instance.currentUser;
 
-
   Future fetchUsers() async {
     final snapshot = await users.get();
-    // print(snapshot); //QuerySnapshot
-    // print(snapshot.docs); //document instanceのリスト
     this.usersList = snapshot.docs
-        .map((user) =>
-            Users(documentID: user.id, name: user['name'], mail: user['mail']))
+        .map(
+          (user) => Users(
+            documentID: user.id,
+            name: user['name'],
+            mail: user['mail'],
+            password: user['password'],
+            imageURL: user['imageURL'],
+          ),
+        )
         .toList();
-    print("fetchUsers");
-    // print(usersList);
-    // usersList
-    //     .map((user) =>
-    //         {print(user.documentID), print(user.name), print(user.mail)})
-    //     .toList();
     notifyListeners();
   }
-
 
   Future onPushLogOut(BuildContext context) async {
     await showDialog(
@@ -51,7 +46,7 @@ class ListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future logOut(BuildContext context)async{
+  Future logOut(BuildContext context) async {
     await auth.signOut();
     print(auth.currentUser);
     currentLogInUser = auth.currentUser;
@@ -72,9 +67,6 @@ class ListViewModel extends ChangeNotifier {
     Navigator.of(context).pop();
     notifyListeners();
   }
-
-
-
 
   Future onPushDeleteUserFromFirebase(BuildContext context, Users user) async {
     await showDialog(
@@ -115,6 +107,4 @@ class ListViewModel extends ChangeNotifier {
     Navigator.of(context).pop();
     notifyListeners();
   }
-
-
 }

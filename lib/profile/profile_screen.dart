@@ -35,6 +35,11 @@ class ProfileScreen extends StatelessWidget {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LogInScreen()));
     }
+    print(selectedUser.name);
+    print(selectedUser.documentID);
+    print(selectedUser.mail);
+    print(selectedUser.password);
+    print(selectedUser.imageURL);
 
     return ChangeNotifierProvider<ProfileModel>(
       create: (_) => ProfileModel(),
@@ -91,24 +96,25 @@ class ProfileScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Container(
+                  padding: EdgeInsets.all(30),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey.shade300
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      if(selectedUser.imageURL != null) Container(
+                        height: 250,
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(20),
-                        child: Container(
-                          color: Colors.white,
-                          child: Icon(
-                            Icons.person,
-                            size: 150,
-                          ),
-                          // todo ↑UserImageに変更
-                          // child: Text('UserImage'),
-                          // width: 250,
-                          // height: 150,
-                          // color: Colors.white,
-                        ),
+                        child: Image.network('${selectedUser.imageURL}')
+                      ),
+                      if(selectedUser.imageURL == null) Container(
+                        height: 250,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(20),
+                          child: Image.network('https://www.nicepng.com/png/detail/136-1366211_group-of-10-guys-login-user-icon-png.png')
                       ),
                       profileTile('UserName', selectedUser.name),
                       profileTile('DocumentID', selectedUser.documentID),

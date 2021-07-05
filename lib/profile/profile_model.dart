@@ -12,24 +12,6 @@ class ProfileModel extends ChangeNotifier {
   User? currentLogInUser = FirebaseAuth.instance.currentUser;
 
 
-  Future fetchUsers() async {
-    final snapshot = await users.get();
-    // print(snapshot); //QuerySnapshot
-    // print(snapshot.docs); //document instanceのリスト
-    this.usersList = snapshot.docs
-        .map((user) =>
-        Users(documentID: user.id, name: user['name'], mail: user['mail']))
-        .toList();
-    print("fetchUsers");
-    // print(usersList);
-    // usersList
-    //     .map((user) =>
-    //         {print(user.documentID), print(user.name), print(user.mail)})
-    //     .toList();
-    notifyListeners();
-  }
-
-
   Future onPushLogOut(BuildContext context) async {
     await showDialog(
         context: context,
@@ -72,49 +54,5 @@ class ProfileModel extends ChangeNotifier {
     Navigator.of(context).pop();
     notifyListeners();
   }
-
-
-
-
-  Future onPushDeleteUserFromFirebase(BuildContext context, Users user) async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('削除しますか？'),
-            actions: [
-              TextButton(
-                child: Text('Back'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              TextButton(
-                child: Text('OK'),
-                onPressed: () => deleteUserFromFirebase(user, context),
-              )
-            ],
-          );
-        });
-  }
-
-  Future deleteUserFromFirebase(Users user, BuildContext context) async {
-    await users.doc(user.documentID).delete();
-    Navigator.of(context).pop();
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('削除しました'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          );
-        });
-    Navigator.of(context).pop();
-    notifyListeners();
-  }
-
 
 }
