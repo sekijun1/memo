@@ -157,7 +157,7 @@ class ListViewScreen extends StatelessWidget {
             await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => AddScreen(user: user),
+                    builder: (context) => SignUpScreen(user: user),
                     fullscreenDialog: true));
           },
         ),

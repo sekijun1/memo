@@ -10,11 +10,6 @@ class LogInModel extends ChangeNotifier {
     if (mail == "" || password == "") {
       throw "「MailAddress」と「Password」を入力してください";
     }
-
-    print(auth);
-    print(mail);
-    print(password);
-
     final result = await auth.signInWithEmailAndPassword(
       email: mail,
       password: password,

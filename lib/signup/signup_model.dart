@@ -11,8 +11,9 @@ class SignUpModel extends ChangeNotifier {
   String password = '';
   String imageURL = '';
   FirebaseAuth auth = FirebaseAuth.instance;
-  // File imageFile;
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+  // File imageFile;
 
   // Future showImagePicker() async {
   //   final ImagePicker picker = ImagePicker();
@@ -23,23 +24,17 @@ class SignUpModel extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-
-
   Future addUserToAuth() async {
     if (name == "" || mail == "" || password == "") {
       throw "「UserName」と「MailAddress」と「Password」を入力してください";
     }
-    // final name = nameController.text;
-    // final mail = mailController.text;
-    // final password = passwordController.text;
-
     print(auth);
     print(name);
     print(mail);
     print(password);
     print(imageURL);
 
-    final UserCredential user = await auth.createUserWithEmailAndPassword(
+    await auth.createUserWithEmailAndPassword(
       email: mail,
       password: password,
     );
@@ -51,7 +46,20 @@ class SignUpModel extends ChangeNotifier {
     await FirebaseFirestore.instance
         .collection('users')
         .add({'name': name, 'mail': mail,'password':password,'imageURL':imageURL});
+    return result;
+  }
+  Future updateUsers(user) async {
+    if (name == "") {
+      throw "「UserName」を入力してください";
+    }
+    await users
+        .doc(user.documentID)
+        .update({'name': name,'imageURL':imageURL});
 
+    final result = await auth.signInWithEmailAndPassword(
+      email: mail,
+      password: password,
+    );
     return result;
   }
 }

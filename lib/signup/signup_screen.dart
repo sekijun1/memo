@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/list_view/list_view_screen.dart';
 import 'package:memo/signup/signup_model.dart';
@@ -11,20 +12,20 @@ class SignUpScreen extends StatelessWidget {
   final nameController = TextEditingController();
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
+  final imageURLController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final bool isUpdate = user != null;
-
     if (isUpdate) {
       nameController.text = user.name;
       mailController.text = user.mail;
       passwordController.text = user.password;
+      imageURLController.text = user.imageURL;
+
+      FirebaseAuth.instance.signOut();
     }
-    print(isUpdate);
-    print(nameController.text);
-    print(mailController.text);
-    print(passwordController.text);
+
     return ChangeNotifierProvider<SignUpModel>(
         create: (_) => SignUpModel(),
         child: Scaffold(
@@ -42,15 +43,26 @@ class SignUpScreen extends StatelessWidget {
                     nameInputTextField(model),
                     SizedBox(height: 50),
                     Text("Mail", style: TextStyle(fontSize: 25)),
-                    mailInputTextField(model),
+                    // if (isUpdate == true)
+                    //   Text(mailController.text, style: TextStyle(fontSize: 20)),
+                    // if (isUpdate == false)
+                      mailInputTextField(model),
                     SizedBox(height: 50),
                     Text("Password", style: TextStyle(fontSize: 25)),
-                    passwordInputTextField(model),
+                    // if (isUpdate == true)
+                    //   Text(passwordController.text,
+                    //       style: TextStyle(fontSize: 20)),
+                    // if (isUpdate == false)
+                      passwordInputTextField(model),
                     SizedBox(height: 50),
                     SizedBox(
                       width: 150,
                       height: 100,
-                      child: Text('No Image Selected'),
+                      child: isUpdate == true
+                          ? imageURLController.text != ""
+                              ? Image.network(imageURLController.text)
+                              : Text('No Image Selected')
+                          : Text('No Image Selected'),
                     ),
                     IconButton(
                         onPressed: () {
@@ -74,10 +86,18 @@ class SignUpScreen extends StatelessWidget {
                     //   },
                     // ),
                     ElevatedButton.icon(
-                      icon: Icon(Icons.login,size: 20,),
-                      label: Text("SignUp & LogIn",style: TextStyle(fontSize: 15),),
+                      icon: Icon(
+                        isUpdate ? Icons.edit : Icons.login,
+                        size: 20,
+                      ),
+                      label: Text(
+                        isUpdate ? "Update & LogIn" : "SignUp & LogIn",
+                        style: TextStyle(fontSize: 15),
+                      ),
                       onPressed: () async {
-                        onPushSignUp(model, context);
+                        isUpdate
+                            ? onPushUpdate(model, context, user)
+                            : onPushSignUp(model, context);
                       },
                     ),
                   ],
@@ -141,6 +161,40 @@ class SignUpScreen extends StatelessWidget {
               builder: (context) => ListViewScreen(
                     logInUser: model.auth.currentUser,
                   )));
+    } catch (e) {
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(e.toString()),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                )
+              ],
+            );
+          });
+    }
+  }
+
+  Future onPushUpdate(SignUpModel model, BuildContext context, user) async {
+    try {
+      await model.updateUsers(user);
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('保存しました'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                )
+              ],
+            );
+          });
+      Navigator.of(context).pop();
     } catch (e) {
       await showDialog(
           context: context,
