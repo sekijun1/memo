@@ -1,6 +1,4 @@
-
 class Users {
-
   Users({
     required this.documentID,
     required this.name,
@@ -14,5 +12,5 @@ class Users {
   final String? mail;
   final String? password;
   final String? imageURL;
-
 }
+

@@ -28,13 +28,11 @@ class HomeScreen extends StatelessWidget {
                             label:
                                 Text("LogIn", style: TextStyle(fontSize: 20)),
                             onPressed: () => model.onPushLogIn(context)),
-                        SizedBox(
-                          width: 50,
-                        ),
+                        SizedBox(width: 50),
                         ElevatedButton.icon(
                             icon: Icon(Icons.person_add),
-                            label: Text("SignUp",
-                                style: TextStyle(fontSize: 20)),
+                            label:
+                                Text("SignUp", style: TextStyle(fontSize: 20)),
                             onPressed: () => model.onPushSignUp(context)),
                       ],
                     ),
@@ -44,18 +42,19 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('UsersListを表示',style: TextStyle(fontSize: 25)),
+                        Text('UsersListを表示', style: TextStyle(fontSize: 25)),
                         _userListTiles(),
                         _userListTiles(),
                         _userListTiles(),
-                        SizedBox(height: 20,),
-                        Text('UserProfileを表示',style: TextStyle(fontSize: 25)),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text('UserProfileを表示', style: TextStyle(fontSize: 25)),
                         Container(
-                          padding: EdgeInsets.only(left: 30,right: 30),
+                          padding: EdgeInsets.only(left: 30, right: 30),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey.shade300
-                          ),
+                              color: Colors.grey.shade300),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -63,11 +62,11 @@ class HomeScreen extends StatelessWidget {
                                   height: 200,
                                   alignment: Alignment.center,
                                   padding: EdgeInsets.all(20),
-                                  child: Image.network('https://www.nicepng.com/png/detail/136-1366211_group-of-10-guys-login-user-icon-png.png')
-                              ),
-                              profileTile('UserName','UserName'),
-                              profileTile('DocumentID','DocumentID'),
-                              profileTile('Mail','Mail'),
+                                  child: Image.network(
+                                      'https://www.nicepng.com/png/detail/136-1366211_group-of-10-guys-login-user-icon-png.png')),
+                              profileTile('UserName', 'UserName'),
+                              profileTile('DocumentID', 'DocumentID'),
+                              profileTile('Mail', 'Mail'),
                               profileTile('Password', 'Password'),
                             ],
                           ),
@@ -84,22 +83,17 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _userListTiles(){
+  Widget _userListTiles() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(10), color: Colors.grey.shade300),
       child: ListTile(
-        title:
-        Text('UserName', style: TextStyle(fontSize: 25)),
-        subtitle:
-        Text('Mail', style: TextStyle(fontSize: 20)),
+        title: Text('UserName', style: TextStyle(fontSize: 25)),
+        subtitle: Text('Mail', style: TextStyle(fontSize: 20)),
         leading: Icon(Icons.person, size: 35),
-        trailing: IconButton(
-            icon: Icon(Icons.add, size: 30),
-            onPressed: () {}),
+        trailing: IconButton(icon: Icon(Icons.add, size: 30), onPressed: () {}),
       ),
     );
   }

@@ -1,46 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:memo/add_screen/add_screen.dart';
 import 'package:memo/home/home_screen.dart';
-import 'package:memo/login/login_screen.dart';
 import 'package:memo/profile/profile_model.dart';
+import 'package:memo/signup/signup_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../users.dart';
 
 class ProfileScreen extends StatelessWidget {
   final Users selectedUser;
-  final logInUser;
-
-  ProfileScreen({required this.selectedUser, this.logInUser});
+  ProfileScreen({required this.selectedUser});
 
   @override
   Widget build(BuildContext context) {
-    final bool isCurrentUser = FirebaseAuth.instance.currentUser != null;
-    if (isCurrentUser) {
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('ログインしてください'),
-              actions: [
-                TextButton(
-                  child: Text('OK'),
-                  onPressed: () => Navigator.of(context).pop(),
-                )
-              ],
-            );
-          });
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LogInScreen()));
-    }
-    print(selectedUser.name);
-    print(selectedUser.documentID);
-    print(selectedUser.mail);
-    print(selectedUser.password);
-    print(selectedUser.imageURL);
-
     return ChangeNotifierProvider<ProfileModel>(
       create: (_) => ProfileModel(),
       child: Consumer<ProfileModel>(builder: (context, model, child) {
@@ -55,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
                   await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddScreen(user: selectedUser),
+                          builder: (context) => SignUpScreen(user: selectedUser),
                           fullscreenDialog: true));
                 },
               ),
