@@ -15,6 +15,7 @@ class SignUpModel extends ChangeNotifier {
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
   late final bool isUpdate;
+  File? imageFile;
 
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,53 +25,24 @@ class SignUpModel extends ChangeNotifier {
     isUpdate = user != null;
     if (isUpdate) {
       nameController.text = user.name;
+      name=user.name;
       mail = user.mail;
       password = user.password;
       imageURL = user.imageURL;
-      FirebaseAuth.instance.signOut();
     }
   }
 
-  selectImagePicker(){
-    File? imageFile;
-    return Column(
-      children: [
-        SizedBox(
-          width: 150,
-          height: 100,
-          // ignore: unnecessary_null_comparison
-          child: imageFile == null
-              ? Text('No Image Selected.')
-              : Image.file(imageFile),
-        ),
-        IconButton(
-          icon: Icon(Icons.library_add),
-          onPressed: () async {
-            final ImagePicker picker = ImagePicker();
-            final PickedFile? pickedFile =
-            await picker.getImage(source: ImageSource.gallery);
-            if (pickedFile != null) {
-              imageFile = File(pickedFile.path);
-            } else {
-              print('pickedFileがNullです');
-            }
-          },
-        )
-      ],
-    );
+  Future showImagePicker() async {
+    final ImagePicker picker = ImagePicker();
+    final PickedFile? pickedFile =
+        await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      this.imageFile = File(pickedFile.path);
+    } else {
+      print('pickedFileがNullです');
+    }
+    notifyListeners();
   }
-
-  // Future showImagePicker() async {
-  //   final ImagePicker picker = ImagePicker();
-  //   final PickedFile? pickedFile =
-  //       await picker.getImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     this.imageFile = File(pickedFile.path);
-  //   } else {
-  //     print('pickedFileがNullです');
-  //   }
-  //   notifyListeners();
-  // }
 
   Future onPushSignUp(BuildContext context) async {
     try {

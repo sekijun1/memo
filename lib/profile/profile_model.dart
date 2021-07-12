@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/home/home_screen.dart';
+import 'package:memo/login/login_screen.dart';
 import 'package:memo/users.dart';
 
 class ProfileModel extends ChangeNotifier {
@@ -52,6 +53,12 @@ class ProfileModel extends ChangeNotifier {
     Navigator.of(context).pop();
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    notifyListeners();
+  }
+
+  onPushLogIn(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LogInScreen()));
     notifyListeners();
   }
 }

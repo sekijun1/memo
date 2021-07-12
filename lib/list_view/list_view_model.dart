@@ -14,31 +14,32 @@ class ListViewModel extends ChangeNotifier {
   User? currentLogInUser = FirebaseAuth.instance.currentUser;
   var currentLogInUserData;
 
-  Future isCurrentUser(context) async {
-    final bool isCurrentUser = FirebaseAuth.instance.currentUser != null;
-    if (isCurrentUser == false) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('LogInしてください'),
-              actions: [
-                TextButton(
-                  child: Text('OK'),
-                  onPressed: () => Navigator.of(context).pop(),
-                )
-              ],
-            );
-          });
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LogInScreen()));
-    }
-  }
+  // Future isCurrentUser(context) async {
+  //   final bool isCurrentUser = FirebaseAuth.instance.currentUser != null;
+  //   if (isCurrentUser == false) {
+  //     showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             title: Text('LogInしてください'),
+  //             actions: [
+  //               TextButton(
+  //                 child: Text('OK'),
+  //                 onPressed: () => Navigator.of(context).pop(),
+  //               )
+  //             ],
+  //           );
+  //         });
+  //     Navigator.pushReplacement(
+  //         context, MaterialPageRoute(builder: (context) => LogInScreen()));
+  //   }
+  // }
 
   currentUserMail() {
-    if (currentLogInUser == null) return Text("Null", style: TextStyle(fontSize: 20));
-    if (currentLogInUser != null) return
-      InkWell(
+    if (currentLogInUser == null)
+      return Text("Guest", style: TextStyle(fontSize: 20));
+    if (currentLogInUser != null)
+      return InkWell(
         child: Text(currentLogInUser!.email.toString(),
             style: TextStyle(fontSize: 20)),
         onTap: () => ProfileScreen(
@@ -52,65 +53,68 @@ class ListViewModel extends ChangeNotifier {
     // if(currentLogInUser != null) currentLogInUserData = users.where('mail' == currentLogInUser!.email);
     // print(currentLogInUserData);
     this.usersList = snapshot.docs
-        .map(
-          (user) => Users(
-            documentID: user.id,
-            name: user['name'],
-            mail: user['mail'],
-            password: user['password'],
-            imageURL: user['imageURL'],
-          ),
-        )
+        .map((user) => Users(
+              documentID: user.id,
+              name: user['name'],
+              mail: user['mail'],
+              password: user['password'],
+              imageURL: user['imageURL'],
+            ))
         .toList();
     notifyListeners();
   }
 
-  currentMail(){
-    currentLogInUserData = users.where('mail' ==currentLogInUser!.email);
+  currentMail() {
+    currentLogInUserData = users.where('mail' == currentLogInUser!.email);
     print(currentLogInUserData.toString());
+  }
+
+  onPushLogIn(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LogInScreen()));
+    notifyListeners();
   }
 
   Future logOutButton(context) async {
     await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('LogOutしますか？'),
-            actions: [
-              TextButton(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('LogOutしますか？'),
+          actions: [
+            TextButton(
                 child: Text('Back'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              TextButton(
-                child: Text('OK'),
-                onPressed: () async {
-                  await auth.signOut();
-                  print(auth.currentUser);
-                  currentLogInUser = auth.currentUser;
-                  print(currentLogInUser);
-                  await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('LogOutしました'),
-                          actions: [
-                            TextButton(
-                              child: Text('OK'),
-                              onPressed: () => Navigator.of(context).pop(),
-                            )
-                          ],
-                        );
-                      });
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
-    if (auth.currentUser == null) {
+                onPressed: () => Navigator.of(context).pop()),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () async {
+                await auth.signOut();
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('LogOutしました'),
+                      actions: [
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () => Navigator.of(context).pop(),
+                        )
+                      ],
+                    );
+                  },
+                );
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+    if (currentLogInUser == null) {
       await Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
+    notifyListeners();
   }
 
   Future onPushSignUpScreen(context) async {
@@ -118,61 +122,63 @@ class ListViewModel extends ChangeNotifier {
         context,
         MaterialPageRoute(
             builder: (context) => SignUpScreen(), fullscreenDialog: true));
+    notifyListeners();
   }
 
   Future onPushDeleteUserFromFirebase(BuildContext context, Users user) async {
     await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('削除しますか？'),
-            actions: [
-              TextButton(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('削除しますか？'),
+          actions: [
+            TextButton(
                 child: Text('Back'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              TextButton(
+                onPressed: () => Navigator.of(context).pop()),
+            TextButton(
                 child: Text('OK'),
-                onPressed: () => deleteUserFromFirebase(user, context),
-              )
-            ],
-          );
-        });
+                onPressed: () => deleteUserFromFirebase(user, context))
+          ],
+        );
+      },
+    );
+    notifyListeners();
   }
 
   Future deleteUserFromFirebase(Users user, BuildContext context) async {
     await users.doc(user.documentID).delete();
     Navigator.of(context).pop();
     await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('削除しました'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('削除しました'),
+          actions: [
+            TextButton(
+                child: Text('OK'), onPressed: () => Navigator.of(context).pop())
+          ],
+        );
+      },
+    );
     Navigator.of(context).pop();
     notifyListeners();
   }
 
-  Future onPushProfileScreen(context,user) async {
+  Future onPushProfileScreen(context, user) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => ProfileScreen(selectedUser: user),
             fullscreenDialog: true));
+    notifyListeners();
   }
 
-  Future onPushEditUserScreen(context,user)async {
+  Future onPushEditUserScreen(context, user) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => SignUpScreen(user: user),
             fullscreenDialog: true));
+    notifyListeners();
   }
 }

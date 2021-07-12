@@ -2,18 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/home/home_model.dart';
 import 'package:provider/provider.dart';
-// user@sekijun.com
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<HomeModel>(
       create: (_) => HomeModel(),
-      child: Scaffold(
-        appBar: AppBar(title: Text('UsersDataBase')),
-        body: Consumer<HomeModel>(
-          builder: (context, model, child) {
-            return SingleChildScrollView(
+      child: Consumer<HomeModel>(
+        builder: (context, model, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('UsersDataBase'),
+              actions: [
+                IconButton(
+                    onPressed: () => model.onPushListView(context),
+                    icon: Icon(Icons.login))
+              ],
+            ),
+            body: SingleChildScrollView(
               child: Column(
                 children: [
                   Container(
@@ -76,9 +82,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

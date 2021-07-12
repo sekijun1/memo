@@ -4,18 +4,20 @@ import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatelessWidget {
   final user;
+
   SignUpScreen({this.user});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SignUpModel>(
-        create: (_) => SignUpModel()..isUpdateCheck(user),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("SignUp"),
-            centerTitle: true,
-          ),
-          body: Consumer<SignUpModel>(builder: (context, model, child) {
+      create: (_) => SignUpModel()..isUpdateCheck(user),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("SignUp"),
+          centerTitle: true,
+        ),
+        body: Consumer<SignUpModel>(
+          builder: (context, model, child) {
             return Padding(
               padding: const EdgeInsets.all(30.0),
               child: Column(
@@ -26,14 +28,14 @@ class SignUpScreen extends StatelessWidget {
                   nameInputTextField(model),
                   SizedBox(height: 50),
                   Text("Mail", style: TextStyle(fontSize: 25)),
-                  if (model.isUpdate == true)
-                    Text(model.mail, style: TextStyle(fontSize: 20)),
-                  if (model.isUpdate == false) mailInputTextField(model),
+                  model.isUpdate == true
+                      ? Text(model.mail, style: TextStyle(fontSize: 20))
+                      : mailInputTextField(model),
                   SizedBox(height: 50),
                   Text("Password", style: TextStyle(fontSize: 25)),
-                  if (model.isUpdate == true)
-                    Text(model.password, style: TextStyle(fontSize: 20)),
-                  if (model.isUpdate == false) passwordInputTextField(model),
+                  model.isUpdate == true
+                      ? Text(model.password, style: TextStyle(fontSize: 20))
+                      : passwordInputTextField(model),
                   SizedBox(height: 50),
                   Center(
                     child: Column(
@@ -53,18 +55,31 @@ class SignUpScreen extends StatelessWidget {
                         //           'https://toppng.com/uploads/preview/icons-logos-emojis-user-icon-png-transparent-11563566676e32kbvynug.png';
                         //     },
                         //     icon: Icon(Icons.library_add)),
-                        model.selectImagePicker(),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              height: 100,
+                              child: model.imageFile == null
+                                  ? Text('No Image Selected.')
+                                  : Image.file(model.imageFile!),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.library_add),
+                              onPressed: () async => model.showImagePicker(),
+                            )
+                          ],
+                        ),
                         ElevatedButton.icon(
                           icon: Icon(
                             model.isUpdate ? Icons.edit : Icons.login,
                             size: 20,
                           ),
                           label: Text(
-                            model.isUpdate
-                                ? "Update & LogIn"
-                                : "SignUp & LogIn",
-                            style: TextStyle(fontSize: 15),
-                          ),
+                              model.isUpdate
+                                  ? "Update & LogIn"
+                                  : "SignUp & LogIn",
+                              style: TextStyle(fontSize: 15)),
                           onPressed: () async {
                             model.isUpdate
                                 ? model.onPushUpdate(context, user)
@@ -77,8 +92,10 @@ class SignUpScreen extends StatelessWidget {
                 ],
               ),
             );
-          }),
-        ));
+          },
+        ),
+      ),
+    );
   }
 
   Widget nameInputTextField(model) {
